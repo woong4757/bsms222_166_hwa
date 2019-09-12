@@ -100,7 +100,7 @@ if(all(x>0)){
 A. `all(x)`  
 B. `any(x)`    
 C. `any(!x)`    
-*D. `all(!x)`*  
+**D. `all(!x)`**  
 
 ```{r}
 x <- c(TRUE, FALSE, FALSE)
