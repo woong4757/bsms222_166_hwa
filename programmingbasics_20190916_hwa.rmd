@@ -97,9 +97,9 @@ if(all(x>0)){
 
 2. Which of the following expressions is always `FALSE` when at least one entry of a logical vector `x` is TRUE?
 
-A. `all(x)` 
-B. `any(x)`  
-C. `any(!x)`  
+A. `all(x)`  
+B. `any(x)`    
+C. `any(!x)`    
 *D. `all(!x)`*  
 
 ```{r}
