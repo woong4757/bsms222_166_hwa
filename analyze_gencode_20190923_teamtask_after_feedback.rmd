@@ -24,7 +24,6 @@ separate(d_transcript, info, sep = ";", into = "gene_id") %>%
   
 ```
 
-
 2. Compute the number of transcripts per gene among gene biotypes. For example, compare the number of transcript per gene between protein-coding genes, long noncoding genes, pseudogenes. You can find the details of gene biotype [here](https://www.gencodegenes.org/pages/biotypes.html).
 
 ```{r}
