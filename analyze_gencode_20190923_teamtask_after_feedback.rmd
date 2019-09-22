@@ -1,0 +1,49 @@
+---
+title: "GENCODE Analysis"
+output: html_notebook
+---
+
+# Tasks
+
+1. Computes the number of transcripts per gene. What is the mean number of transcripts per gene? What is the quantile (25%, 50%, 75%) for these numbers? Which gene has the greatest number of transcript?
+
+```{r}
+#d_transcript <- read_delim('table.transcript_gencode.20190922.txt', delim='\t')
+my_summary <- function(dat){
+ x <- quantile(dat$n, c(0.25, 0.5, 0.75))
+ y <- dat$gene_id[which.max(dat$n)]
+ z <- mean(dat$n)
+ a <- max(dat$n)
+ tibble(average = z, quarter = x[1], half = x[2], three_quarter = x[3], largest_transcript_gene = y, number_of_largest_transcript_gene = a)
+}
+
+separate(d_transcript, info, sep = ";", into = "gene_id") %>%
+  group_by(gene_id) %>%
+  tally() %>%
+  do(my_summary(.))
+  
+```
+
+
+2. Compute the number of transcripts per gene among gene biotypes. For example, compare the number of transcript per gene between protein-coding genes, long noncoding genes, pseudogenes. You can find the details of gene biotype [here](https://www.gencodegenes.org/pages/biotypes.html).
+
+```{r}
+separate(d_transcript, info, sep =";", into = c("gene_id","transcript_id", "gene_type")) %>%
+           group_by(gene_type, gene_id) %>%
+           tally() %>%
+           do(my_summary(.))
+```
+
+
+
+3. Final task is to compute the number of transcripts per gene per chromosome.
+
+```{r}
+separate(d_transcript, info, sep = ";", into = "gene_id") %>%
+  group_by(chrom, gene_id) %>%
+  tally() %>%
+  do(my_summary(.))
+  
+```
+
+
