@@ -30,6 +30,7 @@ d2 <- d1 %>%
 d_gene <- d2 %>%
   filter(feature_type == 'gene') %>%
   mutate(genenumber = order(chrom, start))
+head(d_gene)
 ```
 
 ```{r}
@@ -44,10 +45,12 @@ d_transcript2 <- merge(d_transcript[,], d_gene[, c("chrom","start", "end","genen
 ```{r}
 d_numbered <- rbind(d_gene, d_transcript2) %>%
   arrange(chrom, start, feature_type)
+head(d_numbered)
 ```
 
 ```{r}
 d_numbered <- fill(d_numbered, genenumber)
+head(d_numbered)
 ```
 
 ```{r}
