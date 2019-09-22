@@ -7,7 +7,7 @@ output: html_notebook
 
 1. Computes the number of transcripts per gene. What is the mean number of transcripts per gene? What is the quantile (25%, 50%, 75%) for these numbers? Which gene has the greatest number of transcript?
 
-```{r}
+```{r echo=TRUE}
 #d_transcript <- read_delim('table.transcript_gencode.20190922.txt', delim='\t')
 my_summary <- function(dat){
  x <- quantile(dat$n, c(0.25, 0.5, 0.75))
@@ -26,18 +26,16 @@ separate(d_transcript, info, sep = ";", into = "gene_id") %>%
 
 2. Compute the number of transcripts per gene among gene biotypes. For example, compare the number of transcript per gene between protein-coding genes, long noncoding genes, pseudogenes. You can find the details of gene biotype [here](https://www.gencodegenes.org/pages/biotypes.html).
 
-```{r}
+```{r echo=TRUE}
 separate(d_transcript, info, sep =";", into = c("gene_id","transcript_id", "gene_type")) %>%
            group_by(gene_type, gene_id) %>%
            tally() %>%
            do(my_summary(.))
 ```
 
-
-
 3. Final task is to compute the number of transcripts per gene per chromosome.
 
-```{r}
+```{r echo=TRUE}
 separate(d_transcript, info, sep = ";", into = "gene_id") %>%
   group_by(chrom, gene_id) %>%
   tally() %>%
