@@ -1750,44 +1750,11 @@ summary {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5zdGFsbC5wYWNrYWdlcyhjKFwidGlkeXZlcnNlXCIsXCJkc2xhYnNcIikpXG5gYGAifQ== -->
-<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;,&quot;dslabs&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiSW5zdGFsbGluZyBwYWNrYWdlcyBpbnRvIOKAmC9ob21lL3JzdHVkaW8tdXNlci9SL3g4Nl82NC1wYy1saW51eC1nbnUtbGlicmFyeS8zLjbigJlcbihhcyDigJhsaWLigJkgaXMgdW5zcGVjaWZpZWQpXG50cnlpbmcgVVJMICdodHRwOi8vcGFja2FnZS1wcm94eS9zcmMvY29udHJpYi90aWR5dmVyc2VfMS4yLjEudGFyLmd6J1xuQ29udGVudCB0eXBlICdhcHBsaWNhdGlvbi94LXRhcicgbGVuZ3RoIDg4MzY0IGJ5dGVzICg4NiBLQilcbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG5kb3dubG9hZGVkIDg2IEtCXG5cbnRyeWluZyBVUkwgJ2h0dHA6Ly9wYWNrYWdlLXByb3h5L3NyYy9jb250cmliL2RzbGFic18wLjcuMS50YXIuZ3onXG5Db250ZW50IHR5cGUgJ2FwcGxpY2F0aW9uL3gtdGFyJyBsZW5ndGggNDY4MjY3OCBieXRlcyAoNC41IE1CKVxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbmRvd25sb2FkZWQgNC41IE1CXG5cbiogaW5zdGFsbGluZyAqYmluYXJ5KiBwYWNrYWdlIOKAmHRpZHl2ZXJzZeKAmSAuLi5cbiogRE9ORSAodGlkeXZlcnNlKVxuKiBpbnN0YWxsaW5nICpiaW5hcnkqIHBhY2thZ2Ug4oCYZHNsYWJz4oCZIC4uLlxuKiBET05FIChkc2xhYnMpXG5cblRoZSBkb3dubG9hZGVkIHNvdXJjZSBwYWNrYWdlcyBhcmUgaW5cblx04oCYL3RtcC9SdG1wZjZ6STdYL2Rvd25sb2FkZWRfcGFja2FnZXPigJlcbiJ9 -->
-<pre><code>Installing packages into ‘/home/rstudio-user/R/x86_64-pc-linux-gnu-library/3.6’
-(as ‘lib’ is unspecified)
-trying URL 'http://package-proxy/src/contrib/tidyverse_1.2.1.tar.gz'
-Content type 'application/x-tar' length 88364 bytes (86 KB)
-==================================================
-downloaded 86 KB
-
-trying URL 'http://package-proxy/src/contrib/dslabs_0.7.1.tar.gz'
-Content type 'application/x-tar' length 4682678 bytes (4.5 MB)
-==================================================
-downloaded 4.5 MB
-
-* installing *binary* package ‘tidyverse’ ...
-* DONE (tidyverse)
-* installing *binary* package ‘dslabs’ ...
-* DONE (dslabs)
-
-The downloaded source packages are in
-    ‘/tmp/Rtmpf6zI7X/downloaded_packages’</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkc2xhYnMpXG5saWJyYXJ5KHRpZHl2ZXJzZSlcbmBgYCJ9 -->
-<pre class="r"><code>library(dslabs)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5zdGFsbC5wYWNrYWdlcyhjKFwidGlkeXZlcnNlXCIsXCJkc2xhYnNcIikpXG5saWJyYXJ5KGRzbGFicylcbmxpYnJhcnkodGlkeXZlcnNlKVxuYGBgIn0= -->
+<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;,&quot;dslabs&quot;))
+library(dslabs)
 library(tidyverse)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXHUwMDFiWzMwbeKUgOKUgCBcdTAwMWJbMW1BdHRhY2hpbmcgcGFja2FnZXNcdTAwMWJbMjJtIOKUgOKUgCB0aWR5dmVyc2UgMS4yLjEg4pSA4pSAXHUwMDFiWzM5bVxuXHUwMDFiWzMwbVx1MDAxYlszMm3inJRcdTAwMWJbMzBtIFx1MDAxYlszNG1nZ3Bsb3QyXHUwMDFiWzMwbSAzLjIuMSAgICAgXHUwMDFiWzMybeKclFx1MDAxYlszMG0gXHUwMDFiWzM0bXB1cnJyICBcdTAwMWJbMzBtIDAuMy4yXG5cdTAwMWJbMzJt4pyUXHUwMDFiWzMwbSBcdTAwMWJbMzRtdGliYmxlIFx1MDAxYlszMG0gMi4xLjMgICAgIFx1MDAxYlszMm3inJRcdTAwMWJbMzBtIFx1MDAxYlszNG1kcGx5ciAgXHUwMDFiWzMwbSAwLjguM1xuXHUwMDFiWzMybeKclFx1MDAxYlszMG0gXHUwMDFiWzM0bXRpZHlyICBcdTAwMWJbMzBtIDAuOC4zICAgICBcdTAwMWJbMzJt4pyUXHUwMDFiWzMwbSBcdTAwMWJbMzRtc3RyaW5nclx1MDAxYlszMG0gMS40LjBcblx1MDAxYlszMm3inJRcdTAwMWJbMzBtIFx1MDAxYlszNG1yZWFkciAgXHUwMDFiWzMwbSAxLjMuMSAgICAgXHUwMDFiWzMybeKclFx1MDAxYlszMG0gXHUwMDFiWzM0bWZvcmNhdHNcdTAwMWJbMzBtIDAuNC4wXHUwMDFiWzM5bVxuXHUwMDFiWzMwbeKUgOKUgCBcdTAwMWJbMW1Db25mbGljdHNcdTAwMWJbMjJtIOKUgOKUgOKUgOKUgOKUgCB0aWR5dmVyc2VfY29uZmxpY3RzKCkg4pSA4pSAXG5cdTAwMWJbMzFt4pyWXHUwMDFiWzMwbSBcdTAwMWJbMzRtZHBseXJcdTAwMWJbMzBtOjpcdTAwMWJbMzJtZmlsdGVyKClcdTAwMWJbMzBtIG1hc2tzIFx1MDAxYlszNG1zdGF0c1x1MDAxYlszMG06OmZpbHRlcigpXG5cdTAwMWJbMzFt4pyWXHUwMDFiWzMwbSBcdTAwMWJbMzRtZHBseXJcdTAwMWJbMzBtOjpcdTAwMWJbMzJtbGFnKClcdTAwMWJbMzBtICAgIG1hc2tzIFx1MDAxYlszNG1zdGF0c1x1MDAxYlszMG06OmxhZygpXHUwMDFiWzM5bVxuIn0= -->
-<pre><code>[30m── [1mAttaching packages[22m ── tidyverse 1.2.1 ──[39m
-[30m[32m✔[30m [34mggplot2[30m 3.2.1     [32m✔[30m [34mpurrr  [30m 0.3.2
-[32m✔[30m [34mtibble [30m 2.1.3     [32m✔[30m [34mdplyr  [30m 0.8.3
-[32m✔[30m [34mtidyr  [30m 0.8.3     [32m✔[30m [34mstringr[30m 1.4.0
-[32m✔[30m [34mreadr  [30m 1.3.1     [32m✔[30m [34mforcats[30m 0.4.0[39m
-[30m── [1mConflicts[22m ───── tidyverse_conflicts() ──
-[31m✖[30m [34mdplyr[30m::[32mfilter()[30m masks [34mstats[30m::filter()
-[31m✖[30m [34mdplyr[30m::[32mlag()[30m    masks [34mstats[30m::lag()[39m</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="the-very-basics" class="section level1">

@@ -533,12 +533,12 @@ p + scale_x_log10()
 ```
 
 15. Repeat the previous exercise but now change both axes to be in the log scale.
-```{r}
+```{r echo=TRUE}
 p + scale_x_log10() + scale_y_log10()
 ```
 
 16. Now edit the code above to add the title "Gun murder data" to the plot. Hint: use the 'ggtitle' function.
-```{r}
+```{r echo=TRUE}
 p + scale_x_log10() + scale_y_log10() + ggtitle("Gun murder data")
 ```
 
