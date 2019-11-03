@@ -1,0 +1,289 @@
+---
+title: "Phenotypic heterogeneity in DDG2P by allelic requirement and mutational consequence"
+output: html_notebook
+---
+
+# 1. Loading the Dataset
+
+Loading DDG2P data:
+```{r include=FALSE}
+library(tidyverse)
+library(readr)
+ddg2p <- read_delim("DDG2P_24_9_2019.with_pLI.txt", delim = "\t")
+hpo <- read_delim("table.hpo_obo_20190924.txt", delim = "\t", col_names = T)
+```
+
+# 2. Data Analysis
+
+First, let's take a look at the data frame:
+```{r}
+head(ddg2p)
+head(ddg2p$phenotypes)
+```
+
+I want to separate the data in `phenotypes` column and turn the data in to a tidy format. Let's separate the data using the function `separate_rows`.
+```{r}
+ddg2p_tidy <- ddg2p %>% 
+  separate_rows(phenotypes, sep = ';')
+ddg2p_tidy
+```
+
+Let's `tally` the phenotypes.
+```{r}
+ddg2p_tidy %>%
+  select(`gene symbol`, `allelic requirement`,  `mutation consequence`, `phenotypes`) %>%
+  group_by(`gene symbol`) %>%
+  drop_na() %>%
+  tally(name = 'phenotypes', sort = TRUE) 
+```
+
+Looks like the gene `FLNA` has the most `phenotypes`. Now, let's add `allelic requirement` and `mutation consequence` in the function `group_by` and see the results.
+```{r}
+ddg2p_tidy %>%
+  select(`gene symbol`, `allelic requirement`,  `mutation consequence`, `phenotypes`) %>%
+  group_by(`gene symbol`,  `allelic requirement`,  `mutation consequence`) %>%
+  tally(name = 'phenotypes', sort = TRUE)
+```
+
+The `allelic requirement` and `mutational consequence` does seem to have difference in the results, but `gene symbol` seems too specific for comparing.
+```{r fig.height=9, fig.width=16}
+p <- ddg2p_tidy %>%
+  select(`allelic requirement`, `mutation consequence`, `phenotypes`) %>%
+  drop_na() %>%
+  group_by(`allelic requirement`, `mutation consequence`) %>%
+  count(name = 'phenotypes') %>%
+  ungroup() %>%
+  group_by(`allelic requirement`) %>%
+  mutate(allelic_sum = sum(phenotypes))
+
+p$phenotypes <- as.numeric(p$phenotypes)
+p$allelic_sum <- as.numeric(p$allelic_sum)
+
+p
+```
+
+Before visualizing the data, let's learn about the allelic requirements and the mutational consequences in the dataset.
+
+```{r}
+by_allelic_requirement <- ddg2p_tidy %>%
+  select(`allelic requirement`, phenotypes) %>%
+  drop_na() %>%
+  group_by(`allelic requirement`) %>%
+  count(name = 'phenotypes') %>%
+  arrange(desc(phenotypes))
+
+by_mutational_consequence <- ddg2p_tidy %>%
+  select(`mutation consequence`, `phenotypes`) %>%
+  drop_na() %>%
+  group_by(`mutation consequence`) %>%
+  count(name = 'phenotypes') %>%
+  arrange(desc(phenotypes))
+```
+
+### 2.1 Allelic Requirement
+
+```{r}
+by_allelic_requirement
+```
+
+
+>Biallelic : Of or pertaining to both alleles of a single gene (paternal and maternal). For example, biallelic mutation carriers have a mutation (not necessarily the same mutation) in both copies of a particular gene (a paternal and a maternal mutation).
+
+From [National Cancer Institute Dictionary of Genetic Terms](https://www.cancer.gov/publications/dictionaries/genetics-dictionary/def/biallelic)
+
+>Monoallelic : When only one allele of a gene is actively transcribed, gene expression is termed monoallelic; Gene expression is termed "monoallelic" when only one of the two copies of a gene is active, while the other is silent.
+
+From [Monoallelic Expression](https://www.nature.com/scitable/topicpage/monoallelic-expression-8813275/) by Judith Singer-Sam, Ph.D. (Department of Biology, Beckman Research Institute, City of Hope National Medical Center) © 2010 Nature Education
+
+>Hemizygous : Describes an individual who has only one member of a chromosome pair or chromosome segment rather than the usual two. Hemizygosity is often used to describe X-linked genes in males who have only one X chromosome. This term is sometimes used in somatic cell genetics where cancer cell lines are often hemizygous for certain alleles or chromosomal regions.
+
+From [National Cancer Institute Dictionary of Genetic Terms](https://www.cancer.gov/publications/dictionaries/genetics-dictionary/def/hemizygous)
+
+>X-linked dominant (inheritance) : X-linked dominant inheritance refers to genetic conditions associated with mutations in genes on the X chromosome. A single copy of the mutation is enough to cause the disease in both males (who have one X chromosome) and females (who have two X chromosomes). In some conditions, the absence of a functional gene results in the death of affected males.
+
+From [National Cancer Institute Dictionary of Genetic Terms](https://www.cancer.gov/publications/dictionaries/genetics-dictionary/def/x-linked-dominant)
+
+>Imprinted (Genomic imprinting) : In genomic imprinting the ability of a gene to be expressed depends upon the sex of the parent who passed on the gene. It does not affect the DNA sequence itself. Genomic imprinting affects gene expression by _chemically modifying DNA_ and/or _altering the chromatin structure_.
+
+From [National Human Genome Research Institute](https://www.genome.gov/genetics-glossary/Genetic-Imprinting)
+
+>Mosaic (Mosaicism) : The occurrence of 2 or more cell lines with different genetic or chromosomal make-up, within a single individual or tissue.  
+Mosaicism is when a person has 2 or more genetically different sets of cells in his or her body. If there is an error in mitosis, a cell doesn’t split evenly into 2 cells. The result is that some cells have the normal number of 46 chromosomes, and other cells have more (47) or fewer (45) chromosomes.
+
+From [National Cancer Institute Dictionary of Genetic Terms](https://www.cancer.gov/publications/dictionaries/genetics-dictionary/def/mosaicism) & [Stanford Children's Health](https://www.stanfordchildrens.org/en/topic/default?id=mosaicism-90-P02132)
+
+>X-linked over-dominance (Overdominance) : A type of dominance characterized by a phenotype that is more pronounced in a heterozygote relative to that of the counterpart homozygote.
+
+From [Biology Online Dictionary](https://www.biology-online.org/dictionary/Overdominance)
+
+>Digenic : induced by two genes —used of phenotypic effects manifested only when two nonallelic controlling genes interact
+
+From [Merriam-Webster Online Dictionary](https://www.merriam-webster.com/dictionary/digenic)
+
+### 2.2 Mutational Consequence
+
+```{r}
+by_mutational_consequence
+```
+
+
+>Loss-of-Function (mutation) : A mutation that results in reduced or abolished protein function.  
+A type of mutation in which the altered gene product lacks the molecular function of the wild-type gene. Synonyms: Amorphic Mutation, Null Mutation.
+
+From [MedicineNet](https://www.medicinenet.com/script/main/art.asp?articlekey=39612) & [MGI : Mouse Genome Informatics](http://www.informatics.jax.org/glossary/loss-of-function)
+
+>All Missence/in Frame -  
+Missence mutation : A missense mutation is when the change of a single base pair causes the substitution of a different amino acid in the resulting protein. This amino acid substitution may have no effect, or it may render the protein nonfunctional.  
+In-Frame mutation: a mutation, generally of the missense type, that does not cause a reading frame shift.
+
+From [National Human Genome Research Institute](https://www.genome.gov/genetics-glossary/Missense-Mutation); Missence mutation & [A Dictionary of Genetics](https://www.oxfordreference.com/view/10.1093/acref/9780199766444.001.0001/acref-9780199766444-e-3381); In-Frame mutation
+
+>Activating (Gain-of-Function mutation) : A type of mutation in which the altered gene product possesses a new molecular function or a new pattern of gene expression. Gain-of-function mutations are almost always Dominant or Semidominant.
+
+*Activating and Gain-of-Function seems to be the same thing...
+
+From [MGI : Mouse Genome Informatics](http://www.informatics.jax.org/glossary/loss-of-function)
+
+>Dominant negative : A mutation whose gene product adversely affects the normal, wild-type gene product within the same cell. This usually occurs if the product can still interact with the same elements as the wild-type product, but block some aspect of its function.
+
+From [GenScript](https://www.genscript.com/molecular-biology-glossary/9431/dominant-negative)
+
+>Cis-regulatory or promotor mutation -  
+Cis-regulatory element : A noncoding DNA sequence in or near a gene required for proper spatiotemporal expression of that gene, often containing binding sites for transcription factors. Often used interchangeably with enhancer.  
+Promoter :DNA sequences that define where transcription of a gene by RNA polymerase begins. Typically located directly upstream or at the 5' end of the transcription initiation site. 
+
+* More info on Promoter : Many eukaryotic genes have a conserved promoter sequence called the TATA box, located 25 to 35 base pairs upstream of the transcription start site. Transcription factors bind to the TATA box and initiate the formation of the RNA polymerase transcription complex, which promotes transcription.
+
+From Scitable by nature education; [Cis-regulatory Element](https://www.nature.com/scitable/definition/cis-regulatory-element-cis-regulatory-element-75/), [Promoter](https://www.nature.com/scitable/definition/promoter-259/)
+
+>5_prime or 3_prime UTR mutation (Untranslated Region) : The 5' untranslated region is the nonprotein coding section of the mRNA that is located 5' to the coding region. The 3' untranslated region is the nonprotein coding section of mRNA that is found 3′ to the coding region.
+
+From [Encyclopedia of Systems Biology](https://link.springer.com/referenceworkentry/10.1007%2F978-1-4419-9863-7_317)
+
+>Increased gene dosage (Gene dosage) : The number of copies of a given gene in a specific cell or nucleus.
+
+From [Collins Dictionary of Biology](https://medical-dictionary.thefreedictionary.com/gene+dosage)
+
+>Part of contiguous gene duplication (Contiguous gene syndrome) : A disorder due to deletion of multiple gene loci that are adjacent to one another. Contiguous gene syndromes are characterized by multiple, apparently unrelated, clinical features caused by deletion of the multiple adjacent genes. Each of the individual genes within a contiguous region, when mutated, gives rise to a distinct feature.
+
+From [Contiguous Gene Syndrome](https://www.medicinenet.com/script/main/art.asp?articlekey=13894) by William C. Shiel Jr., MD, FACP, FACR
+
+# 3. Visualization
+
+```{r fig.height=9, fig.width=16}
+p %>% ggplot(aes(reorder(`allelic requirement`,allelic_sum), phenotypes, fill = `mutation consequence`)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  geom_text(aes(label = phenotypes), position="stack", angle = 45) +
+  theme(legend.position = "top") +
+  xlab("allelic requirement") +
+  ggtitle("Phenotypic heterogeneity in DDG2P by allelic requirement and mutational consequence")
+```
+
+I selected stacked bar plot for visualization. But the numbers are overlapping and I want them to be stacked up by size, from biggest to smallest. Back to the dataset!
+
+```{r}
+p_cumsum <- ddg2p_tidy %>%
+  select(`allelic requirement`, `mutation consequence`, `phenotypes`) %>%
+  drop_na() %>%
+  group_by(`allelic requirement`, `mutation consequence`) %>%
+  count(name = 'phenotypes') %>%
+  ungroup() %>%
+  group_by(`allelic requirement`) %>%
+  mutate(allelic_sum = sum(phenotypes)) %>%
+  arrange(-allelic_sum, `allelic requirement`) %>%
+  ungroup() %>%
+  group_by(allelic_sum) %>%
+  arrange(-phenotypes, .by_group=TRUE) %>%
+  mutate(label_ypos = cumsum(phenotypes) - 0.5*phenotypes)
+
+p_cumsum$`mutation consequence` <- reorder(p_cumsum$`mutation consequence`, p_cumsum$phenotypes)
+p_cumsum$`mutation consequence` <- factor(p_cumsum$`mutation consequence`, levels=levels(p_cumsum$`mutation consequence`))
+
+p_cumsum
+```
+
+```{r fig.height=9, fig.width=16}
+p_cumsum %>% ggplot(aes(reorder(`allelic requirement`,allelic_sum), phenotypes, fill = `mutation consequence`)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  geom_text_repel(aes(y = label_ypos, label = phenotypes), angle = 45)+
+  theme(legend.position = "top")+
+  xlab("allelic requirement") +
+  ggtitle("Phenotypic heterogeneity in DDG2P by allelic requirement and mutational consequence")
+```
+
+It's stacked up by size and by using `geom_text_repel`, the numbers don't overlap. Even so, the size difference in `phenotypes` makes it difficult to tell which number is from what kind of mutation consequence. Selecting and grouping the small datasets seems necessary. I'll use what I've leant from **2.1 Allelic Requirement** and **2.2 Mutation Consequence**.
+
+```{r echo=TRUE, fig.height=9, fig.width=16}
+p_selected <- ddg2p_tidy %>%
+  separate_rows(`allelic requirement`, sep = ',') %>%
+  select(`allelic requirement`, `mutation consequence`, `phenotypes`) %>%
+  drop_na() %>%
+  mutate(`allelic requirement` = gsub('imprinted', 'others',`allelic requirement`),
+         `allelic requirement` = gsub('digenic', 'others',`allelic requirement`),
+         `allelic requirement` = gsub('mosaic', 'others',`allelic requirement`),
+         `allelic requirement` = gsub('dominant', 'dominant/overdominance',`allelic requirement`),
+         `allelic requirement` = gsub('over-dominance', 'dominant/overdominance',`allelic requirement`),
+         `mutation consequence` = gsub('5_prime or 3_prime UTR mutation', 'noncoding mutation',`mutation consequence`),
+         `mutation consequence` = gsub('cis-regulatory or promotor mutation', 'noncoding mutation',`mutation consequence`),
+         `mutation consequence` = gsub('activating', 'gain of function',`mutation consequence`),
+         `mutation consequence` = gsub('increased gene dosage', 'others',`mutation consequence`),
+         `mutation consequence` = gsub('part of contiguous gene duplication', 'others',`mutation consequence`)) %>%
+  group_by(`allelic requirement`, `mutation consequence`) %>%
+  count(name = 'phenotypes') %>%
+  ungroup() %>%
+  group_by(`allelic requirement`) %>%
+  mutate(allelic_sum = sum(phenotypes)) %>%
+  arrange(-allelic_sum, `allelic requirement`) %>%
+  ungroup() %>%
+  group_by(allelic_sum) %>%
+  arrange(-phenotypes, .by_group=TRUE) %>%
+  mutate(label_ypos = cumsum(phenotypes) - 0.5*phenotypes)
+
+p_selected$`mutation consequence` <- reorder(p_selected$`mutation consequence`, -p_selected$label_ypos)
+p_selected$`mutation consequence` <- as.factor(p_selected$`mutation consequence`)
+
+plot <- p_selected %>% ggplot(aes(reorder(`allelic requirement`,allelic_sum), phenotypes, fill = `mutation consequence`)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  geom_label_repel(aes(label = phenotypes), position = "stack" )+
+  theme(legend.position = "top")+
+  xlab("allelic requirement") +
+  ggtitle("Phenotypic heterogeneity in DDG2P by allelic requirement and mutational consequence")
+
+plot
+```
+
+For better readability, I changed `geom_text_repel` to `geom_label_repel` to add color to the numbers.  
+There was a problem with stacking by size. Apparently, the code `stat = "identity` brings the `fill` aesthetic and stacks it by the level stored in the `fill` dataset. In this case, this is `mutation consequence`. But I couldn't find a way to change the level of `mutation consequence` by each group `allelic requirement`(changing `mutation consequenc` into factor didn't work. Also, `as.factor`ing phenotype gave me a column with all `NA`s.). This also caused the mismatch between the labels and the plot, since the labels were positioned by a column with cumulated sum of the phenotypes. So I changed the y position in `geom_label_repel` into `position = 'stack'`.
+
+Finally, I changed & grouped the data by using `mutate` and several strings of `gsub`.  
+If you look at the code, I grouped _imprinted_, _digenic_, and _mosaic_ in `allelic requirement` into others. They are a bit different from the rest because they affect a bigger range of alleles.  
+Secondly, I put the _X-linked_ mutations together due to their common ground in affecting the X sex chromosome.  
+In `mutation consequence`, I grouped the _5_prime or 3_prime UTR mutation_ and _cis-regulatory or promotor mutation_ into _noncoding mutation_ as they both have mutations in the noncoding region. Also, I changed _activating_ into _gain of function_ as they both mean the same thing in a broad sense. For the _others_, I put _increased gene dosage_ and _part of contiguous gene duplication_ as the former is change in the dosage and latter is a broad scale mutation.
+
+Now, let's draw the conclusion from the plot I drew.
+
+# 4. Conclusion
+
+```{r fig.height=9, fig.width=16}
+plot
+```
+
+The first one is the `mutation consequence` with the most `phenotypes` is _loss of function_, regardless of the `allelic requirement`. I guess losing a function of a certain normal gene is more severe than the activation of a mutant gene. In cancer biology, the loss of tumor suppressor gene is more often than the activation of oncogene, because tumor suppressor genes usually have important roles in keeping the cell running without any problems.  
+
+The one with the most phenotypes in `allelic requirement` was _biallelic_. I think this is related to the probability of mutation, which in biallelic, a point mutation is enough to cause problems where as in monoallelic and hemizygous, the different allele must be silent(monoallelic) or lost(hemizygous).  
+
+What makes me curious is the unignorable number of _uncertain_ mutation consequences. The introduction and wide usage of NGS has solved us many riddles, yet there are still things we don't know exactly. My guess is that these genes are closely related to many other genes, so the sequence itself is okay but the cascade process is broken? Or it is an epigenetic problem? Further research seems necessary.  
+
+What I want to research further is the most common phenotype in developmental diseases. The dataset `hpo` contains the meaning of codes stored in the phenotypes column in `ddg2p`. By integrating these sets together and using other infos such as the pLI score, we can see which sign is most apparent in developmental disorder at one look.
+
+
+
+
+
+
+
+
+
