@@ -185,10 +185,10 @@ mean(sim>0)
 
 11. The Monte Carlo result and the CLT approximation are close, but not that close. What could account for this?
 
-a. 1,000 simulations is not enough. If we do more, they match.
-**b. The CLT does not work as well when the probability of success is small. In this case, it was 1/19. If we make the number of roulette plays bigger, they will match better.**
-c. The difference is within rounding error.
-d. The CLT only works for averages.
+a. 1,000 simulations is not enough. If we do more, they match.  
+**b. The CLT does not work as well when the probability of success is small. In this case, it was 1/19. If we make the number of roulette plays bigger, they will match better.**  
+c. The difference is within rounding error.  
+d. The CLT only works for averages.  
 
 12. Now create a random variable $Y$ that is your average winnings per bet after playing off your winnings after betting on green 1,000 times.
 ```{r}
@@ -232,9 +232,9 @@ mean(sim>0)
 
 18. The Monte Carlo result and the CLT approximation are now much closer. What could account for this?
 
-a. We are now computing averages instead of sums.
-b. 2,500 Monte Carlo simulations is not better than 1,000.
-**c. The CLT works better when the sample size is larger. We increased from 1,000 to 2,500.**
+a. We are now computing averages instead of sums.  
+b. 2,500 Monte Carlo simulations is not better than 1,000.  
+**c. The CLT works better when the sample size is larger. We increased from 1,000 to 2,500.**  
 d. It is not closer. The difference is within rounding error.
 
 # 14.11 Case study: The Big Short
@@ -512,7 +512,7 @@ x / 180000
 
 7. If the bank wants to minimize the probabilities of losing money, which of the following does **not** make interest rates go up?
 
-a. A smaller pool of loans.
-b. A larger probability of default.
-c. A smaller required probability of losing money.
+a. A smaller pool of loans.  
+b. A larger probability of default.  
+c. A smaller required probability of losing money.  
 **d. The number of Monte Carlo simulations.**
