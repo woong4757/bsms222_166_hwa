@@ -280,8 +280,29 @@ What makes me curious is the unignorable number of _uncertain_ mutation conseque
 What I want to research further is the most common phenotype in developmental diseases. The dataset `hpo` contains the meaning of codes stored in the phenotypes column in `ddg2p`. By integrating these sets together and using other infos such as the pLI score, we can see which sign is most apparent in developmental disorder at one look.
 
 
+# 5. Self-feedback
 
+ 
+```{r echo=TRUE, fig.height=9, fig.width=16}
+plot <- p_selected %>% ggplot(aes(reorder(`allelic requirement`,allelic_sum), phenotypes, fill = `mutation consequence`)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  
+  geom_label_repel(aes(label = phenotypes), position = "stack", force = 2, hjust= "inward" )+
+  
+  # used force = 2 to spread the labels more; hjust= "inward" align lables toward the center
+  
+  theme(legend.position = "top")+
+  xlab("allelic requirement") +
+  
+  scale_fill_viridis(discrete=TRUE)+
+  
+  #for color-blind
+  
+  ggtitle("Phenotypic heterogeneity in DDG2P by allelic requirement and mutational consequence")
 
+plot
+```
 
 
 
